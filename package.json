@@ -1,0 +1,30 @@
+{
+  "name": "clinkctl",
+  "version": "0.1.0",
+  "description": "Command-line tool for CLINK. Point it at a Lightning node to enroll, invoice, and pay from a shell, script, or agent.",
+  "type": "module",
+  "bin": {
+    "clinkctl": "dist/cli.js"
+  },
+  "scripts": {
+    "prepare": "tsc",
+    "start": "node dist/cli.js",
+    "build:bin": "bun build --compile --outfile dist/clinkctl src/cli.ts",
+    "build:binaries": "sh scripts/build-binaries.sh"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shocknet/clinkctl"
+  },
+  "dependencies": {
+    "@shocknet/clink-sdk": "github:shocknet/ClinkSDK#d43cbd0e9a2c675dc08ba97633aab6966f2039f6"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "typescript": "^7.0.2"
+  }
+}
