@@ -17,8 +17,6 @@ sudo mv clinkctl /usr/local/bin/
 
 Also published: `linux-arm64`, `darwin-arm64`, `darwin-x64`, `windows-x64.exe`.
 
-Tag `v*` to cut a release; GitHub Actions compiles with Bun.
-
 Build one yourself:
 
 ```sh
@@ -44,4 +42,4 @@ clinkctl pay lnbc... --ndebit ndebit1...
 
 Signing key: `--nsec`, `CLINK_NSEC`, or `~/.clinkctl/nsec` (created on first run). Last enroll pointers are saved to `~/.clinkctl/last.json` so `invoice` / `pay` can omit them.
 
-`--json` for scripts and agents.
+`--json` writes one JSON object to stdout instead of human lines. Failures are `{ "ok": false, "error": "..." }` on stdout with exit code 1.
