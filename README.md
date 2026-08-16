@@ -25,7 +25,7 @@ bun run build:bin          # native binary at dist/clinkctl
 bun run build:binaries     # all targets under dist/
 ```
 
-Until SDK 1.7 is on npm, this repo pins `@shocknet/clink-sdk` to git commit `d43cbd0` (`enroll-beacon`).
+Until SDK 1.7 is on npm, this repo pins `@shocknet/clink-sdk` to git commit `4494c48` (`enroll-beacon`).
 
 ## Quick start
 
