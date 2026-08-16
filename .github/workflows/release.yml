@@ -14,8 +14,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
       - uses: oven-sh/setup-bun@v2
-      - run: bun install
+      - run: |
+          git config --global url.https://github.com/.insteadOf ssh://git@github.com/
+          git config --global url.https://github.com/.insteadOf git@github.com:
+          npm install
       - run: chmod +x scripts/build-binaries.sh && ./scripts/build-binaries.sh
       - uses: actions/upload-artifact@v4
         with:
