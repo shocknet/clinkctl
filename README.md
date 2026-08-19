@@ -25,7 +25,7 @@ bun run build:bin          # native binary at dist/clinkctl
 bun run build:binaries     # all targets under dist/
 ```
 
-Until SDK 1.7 is on npm, this repo pins `@shocknet/clink-sdk` to git commit `4494c48` (`enroll-beacon`).
+Until SDK 1.7 is on npm, this repo pins `@shocknet/clink-sdk` to git commit `fc21d5f` (`enroll-beacon`).
 
 ## Quick start
 
@@ -40,6 +40,6 @@ clinkctl invoice --amount 21
 clinkctl pay lnbc... --ndebit ndebit1...
 ```
 
-Signing key: `--nsec`, `CLINK_NSEC`, or `~/.clinkctl/nsec` (created on first run). Last enroll pointers are saved to `~/.clinkctl/last.json` so `invoice` / `pay` can omit them.
+Signing key: `--nsec`, `CLINK_NSEC`, or `~/.clinkctl/nsec` (created on first run). Enroll caches pointers in `~/.clinkctl/last.json` so `invoice` / `pay` can omit them. `clinkctl last` reprints the same three lines enroll printed.
 
 `--json` writes one JSON object to stdout instead of human lines. Failures are `{ "ok": false, "error": "..." }` on stdout with exit code 1.

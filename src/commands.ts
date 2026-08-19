@@ -32,6 +32,12 @@ export const cmdBeacon = async (nprofile: string, secret: Uint8Array, json: bool
     formatBeacon(beacon, json)
 }
 
+const printLastHuman = (last: LastEnroll): void => {
+    process.stdout.write(`noffer\t${last.noffer}\n`)
+    process.stdout.write(`ndebit\t${last.ndebit}\n`)
+    process.stdout.write(`nmanage\t${last.nmanage}\n`)
+}
+
 export const cmdEnroll = async (
     nprofile: string,
     secret: Uint8Array,
@@ -55,9 +61,7 @@ export const cmdEnroll = async (
         printJson(last)
         return
     }
-    process.stdout.write(`noffer\t${res.noffer}\n`)
-    process.stdout.write(`ndebit\t${res.ndebit}\n`)
-    process.stdout.write(`nmanage\t${res.nmanage}\n`)
+    printLastHuman(last)
 }
 
 export const cmdInvoice = async (
@@ -119,6 +123,19 @@ export const cmdPay = async (
         return
     }
     process.stdout.write(res.preimage ? `${res.preimage}\n` : "ok\n")
+}
+
+export const cmdLast = (json: boolean): void => {
+    const last = loadLastEnroll()
+    if (!last) {
+        fail("no last enroll — run enroll first", json)
+        return
+    }
+    if (json) {
+        printJson(last)
+        return
+    }
+    printLastHuman(last)
 }
 
 export const cmdDecode = (raw: string | undefined, json: boolean): void => {

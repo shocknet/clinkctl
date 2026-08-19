@@ -2,7 +2,7 @@
 import { parseArgs } from "node:util"
 import { setDebug } from "@shocknet/clink-sdk"
 import { loadOrCreateKey, resolveNprofile } from "./config.js"
-import { cmdBeacon, cmdDecode, cmdEnroll, cmdInvoice, cmdKey, cmdPay } from "./commands.js"
+import { cmdBeacon, cmdDecode, cmdEnroll, cmdInvoice, cmdKey, cmdLast, cmdPay } from "./commands.js"
 import { fail } from "./print.js"
 
 const USAGE = `clinkctl <command>
@@ -11,6 +11,7 @@ Commands:
   key                 show the local signing npub (creates ~/.clinkctl/nsec if missing)
   beacon              fetch the node's clink-node beacon
   enroll              bind this key to an account on the node
+  last                reprint last enroll pointers
   invoice [noffer]    request a BOLT11 (last enroll noffer if omitted)
   pay <bolt11>        pay via ndebit (last enroll or --ndebit)
   decode <string>     decode noffer / ndebit / nmanage / nprofile / nsec / npub
@@ -76,6 +77,11 @@ const parseDifficulty = (): number | undefined => {
 }
 
 const run = async (): Promise<void> => {
+    if (command === "last") {
+        cmdLast(json)
+        return
+    }
+
     const { secret, created } = loadOrCreateKey(values.nsec)
     const nprofile = resolveNprofile(values.nprofile)
 
