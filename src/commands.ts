@@ -97,7 +97,11 @@ const requestInvoice = async (
     let onPaid: ((receipt: NofferReceipt) => void) | undefined
     const paid = wantReceipt
         ? new Promise<NofferReceipt>(resolve => {
-            onPaid = resolve
+            onPaid = (receipt) => {
+                if (receipt.res === 'ok') {
+                    resolve(receipt)
+                }
+            }
         })
         : null
     const res = await sdk.Noffer(
