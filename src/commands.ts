@@ -116,9 +116,6 @@ const requestInvoice = async (
     if (!paid) {
         return
     }
-    if (!json) {
-        process.stderr.write("waiting for receipt\n")
-    }
     printReceipt(await paid, json)
 }
 
