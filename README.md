@@ -34,10 +34,13 @@ clinkctl key
 clinkctl beacon
 clinkctl enroll
 clinkctl invoice --amount 21
+clinkctl invoice --amount 21 --receipt
 # pay needs a bolt11 this account can settle
 clinkctl pay lnbc... --ndebit ndebit1...
 ```
 
 Signing key: `--nsec`, `CLINK_NSEC`, or `~/.clinkctl/nsec` (created on first run). Enroll caches pointers in `~/.clinkctl/last.json` so `invoice` / `pay` can omit them. `clinkctl last` reprints the same three lines enroll printed.
 
-`--json` writes one JSON object to stdout instead of human lines. Failures are `{ "ok": false, "error": "..." }` on stdout with exit code 1.
+`--receipt` prints the bolt11, then stays until the offer receipt arrives (`ok` or a preimage). With `--json`, that is two JSON objects: the invoice, then the receipt.
+
+Without `--receipt`, `--json` writes one JSON object. Failures are `{ "ok": false, "error": "..." }` on stdout with exit code 1.

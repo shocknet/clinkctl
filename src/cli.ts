@@ -23,6 +23,7 @@ Flags:
   --desc              invoice description
   --difficulty        enroll PoW bits (omit to use beacon / probe)
   --ndebit            ndebit pointer for pay
+  --receipt           stay until that invoice is paid
   --json
   --debug
 `
@@ -36,6 +37,7 @@ const { values, positionals } = parseArgs({
         desc: { type: "string" },
         difficulty: { type: "string" },
         ndebit: { type: "string" },
+        receipt: { type: "boolean", default: false },
         json: { type: "boolean", default: false },
         debug: { type: "boolean", default: false },
         help: { type: "boolean", short: "h", default: false },
@@ -96,7 +98,7 @@ const run = async (): Promise<void> => {
             await cmdEnroll(nprofile, secret, parseDifficulty(), json)
             return
         case "invoice":
-            await cmdInvoice(secret, positionals[1], parseAmount(), values.desc, json)
+            await cmdInvoice(secret, positionals[1], parseAmount(), values.desc, json, values.receipt === true)
             return
         case "pay":
             await cmdPay(secret, positionals[1], values.ndebit, parseAmount(), json)
