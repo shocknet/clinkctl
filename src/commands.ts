@@ -132,9 +132,7 @@ const printReceipt = (receipt: NofferReceipt, json: boolean): void => {
         printJson(receipt)
         return
     }
-    const preimage = "preimage" in receipt && typeof receipt.preimage === "string"
-        ? receipt.preimage
-        : ""
+    const preimage = receipt.preimage ?? ""
     process.stdout.write(`${preimage || "ok"}\n`)
 }
 

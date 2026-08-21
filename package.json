@@ -21,7 +21,7 @@
     "url": "https://github.com/shocknet/clinkctl"
   },
   "dependencies": {
-    "@shocknet/clink-sdk": "^1.7.2"
+    "@shocknet/clink-sdk": "^1.7.3"
   },
   "devDependencies": {
     "@types/node": "^26.2.0",
