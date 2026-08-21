@@ -1,4 +1,4 @@
-import { beaconIsFresh, newNdebitPaymentRequest } from "@shocknet/clink-sdk"
+import { beaconIsFresh, newNdebitPaymentRequest, type ClinkSDK, type NofferReceipt } from "@shocknet/clink-sdk"
 import { keyInfo, loadLastEnroll, saveLastEnroll, type LastEnroll } from "./config.js"
 import { fail, printJson } from "./print.js"
 import {
@@ -70,6 +70,7 @@ export const cmdInvoice = async (
     amount: number | undefined,
     desc: string | undefined,
     json: boolean,
+    wantReceipt: boolean,
 ): Promise<void> => {
     const raw = nofferRaw || loadLastEnroll()?.noffer
     if (!raw) {
@@ -78,20 +79,62 @@ export const cmdInvoice = async (
     }
     const noffer = requireNoffer(raw)
     const sdk = sdkFromPointer(secret, noffer.pubkey, noffer.relay)
-    const res = await withSdk(sdk, s => s.Noffer({
-        offer: noffer.offer,
-        amount_sats: amount,
-        description: desc,
-    }))
+    try {
+        await requestInvoice(sdk, noffer.offer, amount, desc, json, wantReceipt)
+    } finally {
+        sdk.Stop()
+    }
+}
+
+const requestInvoice = async (
+    sdk: ClinkSDK,
+    offer: string,
+    amount: number | undefined,
+    desc: string | undefined,
+    json: boolean,
+    wantReceipt: boolean,
+): Promise<void> => {
+    let onPaid: ((receipt: NofferReceipt) => void) | undefined
+    const paid = wantReceipt
+        ? new Promise<NofferReceipt>(resolve => {
+            onPaid = resolve
+        })
+        : null
+    const res = await sdk.Noffer(
+        { offer, amount_sats: amount, description: desc },
+        onPaid,
+    )
     if (!("bolt11" in res)) {
         fail(res.error, json, res)
         return
     }
-    if (json) {
-        printJson(res)
+    printBolt11(res.bolt11, json)
+    if (!paid) {
         return
     }
-    process.stdout.write(`${res.bolt11}\n`)
+    if (!json) {
+        process.stderr.write("waiting for receipt\n")
+    }
+    printReceipt(await paid, json)
+}
+
+const printBolt11 = (bolt11: string, json: boolean): void => {
+    if (json) {
+        printJson({ bolt11 })
+        return
+    }
+    process.stdout.write(`${bolt11}\n`)
+}
+
+const printReceipt = (receipt: NofferReceipt, json: boolean): void => {
+    if (json) {
+        printJson(receipt)
+        return
+    }
+    const preimage = "preimage" in receipt && typeof receipt.preimage === "string"
+        ? receipt.preimage
+        : ""
+    process.stdout.write(`${preimage || "ok"}\n`)
 }
 
 export const cmdPay = async (
